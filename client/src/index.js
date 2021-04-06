@@ -1,23 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
 import reducers from "./reducers";
 import "semantic-ui-css/semantic.min.css";
+import reduxThunk from "redux-thunk";
 
 import App from "./components/App";
-
+const storeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  reducers,
+  storeEnhancers(applyMiddleware(reduxThunk))
+);
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider
-      store={createStore(
-        reducers,
-        window.__REDUX_DEVTOOLS_EXTENSION__ &&
-          window.__REDUX_DEVTOOLS_EXTENSION__()
-      )}
-    >
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById("root")
 );
